@@ -6,19 +6,20 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-form>
+                <v-form v-model="valid">
                     <v-textarea
                         height="400px"
                         solo
                         label="こちらにご記入ください"
                         v-model="consult"
+                        :rules="[formRulesRequired, formRulesMinlength]"
                     ></v-textarea>
 
                     <v-card-action>
                         <v-btn class="info mr-8" @click="returnQ2()"
                             >前へ戻る<v-icon>mdi-menu-left</v-icon></v-btn
                         >
-                        <v-btn class="info" @click="saveQ3()"
+                        <v-btn class="info" @click="saveQ3()" :disabled="!valid"
                             >次へ進む<v-icon>mdi-menu-right</v-icon></v-btn
                         >
                     </v-card-action>
@@ -33,9 +34,7 @@ export default {
     name: 'step3',
     data() {
         return {
-            insurance: this.$store.state.insurance,
-            hospitalization: this.$store.state.hospitalization,
-            surgery: this.$store.state.surgery,
+            valid: true,
             consult: '',
         };
     },
@@ -47,12 +46,16 @@ export default {
             this.$router.push('/confirm');
         },
         returnQ2: function () {
-            this.$store.commit('returnQ2', {
-                insurance: this.insurance,
-                hospitalization: this.hospitalization,
-                surgery: this.surgery,
-            });
+            this.$store.commit('returnQ2', {});
             this.$router.push('/step2');
+        },
+    },
+    computed: {
+        formRulesRequired: function () {
+            return this.$store.state.formRules.required;
+        },
+        formRulesMinlength: function () {
+            return this.$store.state.formRules.minLength;
         },
     },
 };

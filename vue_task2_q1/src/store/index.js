@@ -5,8 +5,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        formRules: {
+            required: (value) => !!value || '必須です。',
+            minLength: (value) => (value && value.length >= 2) || '最低2文字以上入力してください',
+        },
         records: {
-            sex: '男性',
+            sex: '',
             birthday: new Date().toISOString().substr(0, 10),
             insurance: '',
             hospitalization: '',

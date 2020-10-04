@@ -6,8 +6,8 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-form>
-                    <v-radio-group v-model="insurance">
+                <v-form v-model="valid">
+                    <v-radio-group v-model="insurance" :rules="[formRulesRequired]">
                         <template>
                             <div>現在、生命保険に加入されていますか？</div>
                         </template>
@@ -16,7 +16,11 @@
                             <v-radio label="いいえ" value="いいえ"></v-radio>
                         </v-container>
                     </v-radio-group>
-                    <v-radio-group v-model="hospitalization" v-if="seeQuestion2()">
+                    <v-radio-group
+                        v-model="hospitalization"
+                        v-if="seeQuestion2()"
+                        :rules="[formRulesRequired]"
+                    >
                         <template>
                             <div>
                                 現在入院中ですか？<br />または最近3ヶ月以内に医師の診察・検査の結果、入院・手術を薦められたことはありますか？
@@ -27,7 +31,11 @@
                             <v-radio label="いいえ" value="いいえ"></v-radio>
                         </v-container>
                     </v-radio-group>
-                    <v-radio-group v-model="surgery" v-if="seeQuestion3()">
+                    <v-radio-group
+                        v-model="surgery"
+                        v-if="seeQuestion3()"
+                        :rules="[formRulesRequired]"
+                    >
                         <template>
                             <div>
                                 過去5年以内に、病気や怪我で手術を受けたこと、または継続して7日以内の入院をしたことがありますか？
@@ -42,7 +50,7 @@
                         <v-btn class="info mr-8" @click="returnQ1()"
                             >前へ戻る<v-icon>mdi-menu-left</v-icon></v-btn
                         >
-                        <v-btn class="info" @click="saveQ2()"
+                        <v-btn class="info" @click="saveQ2()" :disabled="!valid"
                             >次へ進む<v-icon>mdi-menu-right</v-icon></v-btn
                         >
                     </v-card-action>
@@ -57,8 +65,7 @@ export default {
     name: 'step2',
     data() {
         return {
-            sex: this.$store.state.records.sex,
-            birthday: this.$store.state.records.birthday,
+            valid: true,
             insurance: this.$store.state.records.insurance,
             hospitalization: this.$store.state.records.hospitalization,
             surgery: this.$store.state.records.surgery,
@@ -74,10 +81,7 @@ export default {
             this.$router.push('/step3');
         },
         returnQ1: function () {
-            this.$store.commit('returnQ1', {
-                sex: this.sex,
-                birthday: this.birthday,
-            });
+            this.$store.commit('returnQ1', {});
             this.$router.push('/');
         },
         seeQuestion2: function () {
@@ -85,6 +89,11 @@ export default {
         },
         seeQuestion3: function () {
             return (this.insurance !== '') & (this.hospitalization !== '');
+        },
+    },
+    computed: {
+        formRulesRequired: function () {
+            return this.$store.state.formRules.required;
         },
     },
 };

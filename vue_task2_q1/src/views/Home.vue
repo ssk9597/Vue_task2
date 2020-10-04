@@ -6,9 +6,9 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-form>
+                <v-form v-model="valid">
                     性別をお選びください
-                    <v-radio-group v-model="sex" row>
+                    <v-radio-group v-model="sex" row :rules="[formRulesRequired]">
                         <v-radio label="男性" value="男性"></v-radio>
                         <v-radio label="女性" value="女性"></v-radio>
                     </v-radio-group>
@@ -48,16 +48,13 @@
                         </v-menu>
                     </v-row>
                     <v-card-action>
-                        <v-btn class="info" @click="saveQ1()"
+                        <v-btn class="info" @click="saveQ1()" :disabled="!valid"
                             >次へ進む<v-icon>mdi-menu-right</v-icon></v-btn
                         >
                     </v-card-action>
                 </v-form>
             </v-card-text>
         </v-card>
-
-        <!-- <pre><code>{{ sex }}</code></pre>
-        <pre><code>{{ birthday }}</code></pre> -->
     </v-app>
 </template>
 
@@ -66,6 +63,7 @@ export default {
     name: 'home',
     data() {
         return {
+            valid: true,
             sex: this.$store.state.records.sex,
             birthday: this.$store.state.records.birthday,
             menu: false,
@@ -78,6 +76,11 @@ export default {
                 birthday: this.birthday,
             });
             this.$router.push('/step2');
+        },
+    },
+    computed: {
+        formRulesRequired: function () {
+            return this.$store.state.formRules.required;
         },
     },
 };
