@@ -12,7 +12,7 @@
                         solo
                         label="こちらにご記入ください"
                         v-model="consult"
-                        :rules="[formRulesRequired, formRulesMinlength]"
+                        :rules="[formRules.required]"
                     ></v-textarea>
 
                     <v-card-action>
@@ -34,6 +34,11 @@ export default {
     name: 'step3',
     data() {
         return {
+            formRules: {
+                required: (value) => {
+                    return !!value || '必須です';
+                },
+            },
             valid: true,
             consult: '',
         };
@@ -48,14 +53,6 @@ export default {
         returnQ2: function () {
             this.$store.commit('returnQ2', {});
             this.$router.push('/step2');
-        },
-    },
-    computed: {
-        formRulesRequired: function () {
-            return this.$store.state.formRules.required;
-        },
-        formRulesMinlength: function () {
-            return this.$store.state.formRules.minLength;
         },
     },
 };

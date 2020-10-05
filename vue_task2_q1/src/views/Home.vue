@@ -8,7 +8,7 @@
             <v-card-text>
                 <v-form v-model="valid">
                     性別をお選びください
-                    <v-radio-group v-model="sex" row :rules="[formRulesRequired]">
+                    <v-radio-group v-model="sex" row :rules="[formRules.required]">
                         <v-radio label="男性" value="男性"></v-radio>
                         <v-radio label="女性" value="女性"></v-radio>
                     </v-radio-group>
@@ -63,6 +63,11 @@ export default {
     name: 'home',
     data() {
         return {
+            formRules: {
+                required: (value) => {
+                    return !!value || '必須です';
+                },
+            },
             valid: true,
             sex: this.$store.state.records.sex,
             birthday: this.$store.state.records.birthday,
@@ -76,11 +81,6 @@ export default {
                 birthday: this.birthday,
             });
             this.$router.push('/step2');
-        },
-    },
-    computed: {
-        formRulesRequired: function () {
-            return this.$store.state.formRules.required;
         },
     },
 };

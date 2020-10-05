@@ -7,7 +7,7 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-form v-model="valid">
-                    <v-radio-group v-model="insurance" :rules="[formRulesRequired]">
+                    <v-radio-group v-model="insurance" :rules="[formRules.required]">
                         <template>
                             <div>現在、生命保険に加入されていますか？</div>
                         </template>
@@ -19,7 +19,7 @@
                     <v-radio-group
                         v-model="hospitalization"
                         v-if="seeQuestion2()"
-                        :rules="[formRulesRequired]"
+                        :rules="[formRules.required]"
                     >
                         <template>
                             <div>
@@ -34,7 +34,7 @@
                     <v-radio-group
                         v-model="surgery"
                         v-if="seeQuestion3()"
-                        :rules="[formRulesRequired]"
+                        :rules="[formRules.required]"
                     >
                         <template>
                             <div>
@@ -65,6 +65,11 @@ export default {
     name: 'step2',
     data() {
         return {
+            formRules: {
+                required: (value) => {
+                    return !!value || '必須です';
+                },
+            },
             valid: true,
             insurance: this.$store.state.records.insurance,
             hospitalization: this.$store.state.records.hospitalization,
@@ -89,11 +94,6 @@ export default {
         },
         seeQuestion3: function () {
             return (this.insurance !== '') & (this.hospitalization !== '');
-        },
-    },
-    computed: {
-        formRulesRequired: function () {
-            return this.$store.state.formRules.required;
         },
     },
 };
